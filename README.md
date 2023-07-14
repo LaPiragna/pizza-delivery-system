@@ -17,3 +17,6 @@ The main purpose of the project is to include several differents concepts that w
 * ATM ✔
 * API (optional) 🤷‍♂️ maybe?
 * UI (optional) 🤷‍♂️ maybe?
+
+(reminder of translating of into an unique language, such a bad habit >_<)
+
