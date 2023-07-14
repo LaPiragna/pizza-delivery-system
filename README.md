@@ -1,7 +1,9 @@
 # PIZZA DELIVERY SYSTEM
 This is a work for college uploaded to github :9
 The main purpose of the project is to include several differents concepts that we have learnt this year in college.
-<pre>LINK</pre>
+
+[LINK](https://github.com/LaPiragna/pizza-delivery-system/tree/main/src)
+
 ↘ I am listing them
 * class design 🆑
 * Fundamentals of OOP 📃
