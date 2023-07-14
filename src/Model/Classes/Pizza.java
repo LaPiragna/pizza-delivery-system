@@ -57,16 +57,6 @@ public class Pizza implements IJson, Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    /**
-     * Verifica si la pizza es apta para veganos.
-     *
-     * @return verdadero si la pizza es apta para veganos, falso en caso contrario.
-     */
-    public boolean isVeg() {
-        return veg;
-    }
-
     /**
      * Establece si la pizza es apta para veganos o no.
      *
@@ -93,16 +83,6 @@ public class Pizza implements IJson, Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    /**
-     * Obtiene la URL de imagen de la pizza.
-     *
-     * @return la URL de imagen de la pizza.
-     */
-    public String getImg() {
-        return img;
-    }
-
     /**
      * Establece la URL de imagen de la pizza.
      *

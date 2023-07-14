@@ -7,9 +7,6 @@ import java.io.*;
 /**
  * En esta clase se pressenta la interactividad del cliente para realizar pedidos.*/
 public class SistemaPedidos {
-    /**
-     * Constructor predeterminado para la clase MenuPedido.
-     * */
 
     public static String mostrarMenu() {
         return """
@@ -62,8 +59,7 @@ public class SistemaPedidos {
         return eleccion;
     }
 
-    public static boolean agregarPedido(int id, int cantidad,
-                         ColeccionPedidos coleccionPedidos) {
+    public static boolean agregarPedido(int id, int cantidad,ColeccionPedidos coleccionPedidos) {
         return coleccionPedidos.agregarPedido(id,cantidad);
     }
 
