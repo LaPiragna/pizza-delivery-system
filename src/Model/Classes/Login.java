@@ -1,8 +1,8 @@
-package Modelo.Menues;
+package Model.Classes;
+import Model.Exceptions.*;
+
 import java.io.*;
 import java.util.*;
-import Excepciones.*;
-import Modelo.Cuenta;
 
 /**
  * Clase para registracion/inicio sesion.
