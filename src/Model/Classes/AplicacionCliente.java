@@ -22,16 +22,16 @@ public class AplicacionCliente {
     public void main() {
         int eleccion;
         do {
-            System.out.println(SistemaPedidos.mostrarMenu());
-            eleccion = scanner.nextInt();eleccion = SistemaPedidos.menu(eleccion);
+            System.out.println(SistemaPedidosCliente.mostrarMenu());
+            eleccion = scanner.nextInt();eleccion = SistemaPedidosCliente.menu(eleccion);
             switch (eleccion) {
                 case 0 -> {break;}
                 case 1 -> { //Ver pedido.
                     do {
-                        System.out.println(SistemaPedidos.obtenerEstadoDelPedido(coleccionPedidos));
-                        System.out.println(SistemaPedidos.mostrarMenuModificarPedido());
+                        System.out.println(SistemaPedidosCliente.obtenerEstadoDelPedido(coleccionPedidos));
+                        System.out.println(SistemaPedidosCliente.mostrarMenuModificarPedido());
                         scanner.nextLine();eleccion = scanner.nextInt();
-                        eleccion = SistemaPedidos.menuModificacionDelPedido(eleccion, coleccionPedidos);
+                        eleccion = SistemaPedidosCliente.menuModificacionDelPedido(eleccion, coleccionPedidos);
                         switch (eleccion) {
                             case 0 -> {eleccion=1;break;}
                             case 1 -> {System.out.println(ListaPizzas.listarPizzas());eleccion=2;break;}
@@ -46,7 +46,7 @@ public class AplicacionCliente {
                                         1. Confirmar.
                                         0. Cancelar.""");
                                         confirmar = scanner.nextInt();
-                                        if (confirmar == 1) SistemaPedidos.agregarPedido(id, cantidad, coleccionPedidos); //retorno boolean.
+                                        if (confirmar == 1) SistemaPedidosCliente.agregarPedido(id, cantidad, coleccionPedidos); //retorno boolean.
                                     } while (confirmar != 1 &&
                                             confirmar != 0);
                                 }break;
@@ -54,14 +54,14 @@ public class AplicacionCliente {
                             case 3 -> {//quitar producto.
                                 int indice, cantidad;System.out.println("Ingresa el numero del articulo: ");indice = scanner.nextInt();
                                 System.out.println("Ingresa la cantidad que quieres remover: ");cantidad = scanner.nextInt();
-                                Pedido aux = SistemaPedidos.quitarPedido(indice, cantidad,coleccionPedidos);
+                                Pedido aux = SistemaPedidosCliente.quitarPedido(indice, cantidad,coleccionPedidos);
                                 break;
                             }
                         }
                     } while (eleccion != 1);break;
                 }
                 case 2 -> {//enviar el pedido.
-                    boolean flag = SistemaPedidos.enviarPedido(coleccionPedidos);
+                    boolean flag = SistemaPedidosCliente.enviarPedido(coleccionPedidos);
                     if (flag) {System.out.println("El pedido se ha enviado correctamente.");eleccion = 0;}
                     else {System.out.println("Hubo un error en el envio.");}
                     //usar excepcion.

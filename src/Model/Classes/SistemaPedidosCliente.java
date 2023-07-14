@@ -6,7 +6,7 @@ import java.io.*;
 
 /**
  * En esta clase se pressenta la interactividad del cliente para realizar pedidos.*/
-public class SistemaPedidos {
+public class SistemaPedidosCliente {
 
     public static String mostrarMenu() {
         return """
