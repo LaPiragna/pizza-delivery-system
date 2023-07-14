@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"Model.Interfaces","l":"IJson"},{"p":"<Unnamed>","l":"Main"},{"p":"Model.Classes","l":"Pizza"},{"p":"Model.Classes","l":"Pizzeria"}];updateSearchResults();
