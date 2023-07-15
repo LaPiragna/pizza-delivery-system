@@ -1,5 +1,6 @@
 package Model.Classes;
 
+import Model.Exceptions.EmptyOrderException;
 import Model.Interfaces.IArchivos;
 
 import java.io.*;
@@ -71,9 +72,9 @@ public class SistemaPedidosCliente {
         return coleccionPedidos.obtenerEstadoDelPedido();
     }
 
-    public static boolean enviarPedido(ColeccionPedidos coleccionPedidos) {
+    public static boolean enviarPedido(ColeccionPedidos coleccionPedidos) throws EmptyOrderException {
         boolean ret = false;
-        if (coleccionPedidos.getPedidos().size() == 0) return ret; //excepcion.
+        if (coleccionPedidos.getPedidos().size() == 0) throw new EmptyOrderException(); //excepcion.
         File file = new File(IArchivos.PEDIDOS_BIN);
         if (!file.exists()) {
             try {file.createNewFile();}

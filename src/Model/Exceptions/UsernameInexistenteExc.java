@@ -6,7 +6,7 @@ public class UsernameInexistenteExc extends Exception {
 
     public UsernameInexistenteExc(String username) {
         this.username = username;
-        this.message = "nx se ha encxntradx al usuarix '" + username + "'.";
+        this.message = "EL usuario '" + username + "' no existe.";
     }
 
     public String getMessage() {

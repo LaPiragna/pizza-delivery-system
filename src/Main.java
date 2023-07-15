@@ -4,6 +4,7 @@ import Model.Classes.Login;
 import Model.Classes.MenuPrincipal;
 import Model.Exceptions.*;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 /*** Clase principal. Cxntenedor del programa.**/
 public class Main {
@@ -11,12 +12,13 @@ public class Main {
     /*** Metodo main.* */
     public static void main(String[] arg) {
         Cuenta cuenta = new Cuenta();// variable auxiliar.
-        int menuIngreso = 1;//VARIABLES DE CONTROL DE FLUJO.
+        int menuIngreso = -1;//VARIABLE DE CONTROL DE FLUJO.
         while (menuIngreso != 0) {
-            menuIngreso = 0; //reset
-            while (menuIngreso < 1 || menuIngreso > 3) {   // VALIDACION.
+            menuIngreso = -1;
+            while (menuIngreso < 0 || menuIngreso > 2) {   // VALIDACION.
                 Login.printMenu(); // muestra del menu
-                menuIngreso = scanner.nextInt();
+                try {menuIngreso = scanner.nextInt();if(menuIngreso < 0 || menuIngreso > 2) System.out.println("Ingreso invalido. Reintentar.");}
+                catch (InputMismatchException e){System.out.println("Ingreso invalido. Reintentar.");menuIngreso=-1;scanner.nextLine();}
             }
             String usuario = "", clave = "";
             if (menuIngreso != 0) {/* - - - INGRESO DE DATOS */
@@ -34,28 +36,28 @@ public class Main {
                         cuenta = Login.registro(usuario, clave); //retorna la cuenta registrada.
                         menuIngreso=1;//accede al menu principal
                     }
-                    catch (UsernameExistenteExc e) {
+                    catch (UsernameExistenteExc e) { //el username ya existe
                         System.out.println(e.getMessage());
-                        menuIngreso = 3; //no accede al menu principal
+                        menuIngreso = 4; //no accede al menu principal
                     }
-                    catch (RegistryCancelledException e) {
-                        System.out.println(e.getMessage()); //usuario cancelo el registro.
-                        menuIngreso = 3; //no accede al menu principal
+                    catch (RegistryCancelledException e) {//usuario cancelo el registro.
+                        System.out.println(e.getMessage());
+                        menuIngreso = 4; //no accede al menu principal
                     }
                     break;
                 case 2: //INICIO DE SESION.
                     try {
                         cuenta = Login.iniciarSesion(usuario, clave); //retorna la cuenta que ha iniciado sesion.
                         menuIngreso =1; //accede al menu principal
-                    } catch (UsernameInexistenteExc e) {
+                    } catch (UsernameInexistenteExc e) {//el username no se pudo encontrar.
                         System.out.println(e.getMessage());
-                        menuIngreso = 3; //no accede al menu principal
+                        menuIngreso = 4; //no accede al menu principal
                     }catch (LoginCancelledException e) { //usuario cancela el proceso de inicio de sesion.
                         System.out.println(e.getMessage());
-                        menuIngreso = 3; //no accede al menu principal
+                        menuIngreso = 4; //no accede al menu principal
                     } catch (PasswordIncorrectException e) { //usuario ingresa clave incorrectamente.
                         System.out.println(e.getMessage());
-                        menuIngreso = 3; //no accede al menu principal
+                        menuIngreso = 4; //no accede al menu principal
                     }
                     break;
                 case 3: //SALIR DEL PROGRAMA.
@@ -64,22 +66,18 @@ public class Main {
             }
             /* SWITCH DEL MENU LOGIN */
             /*  - -  - - - - - - - - - - - LOGIN */
-
-            if (menuIngreso != 0) {
-
+            if (menuIngreso != 0 && menuIngreso != 4) {
                 while (menuIngreso != 0) {
-
                     /*  - - - - - -  - - - - - -  MENU PRINCIPAL  - - - - - -   - - - - - - */
-                    menuIngreso = 0;
-
+                    menuIngreso = -1;
                     //VALIDACION
-                    while (menuIngreso < 1 || menuIngreso > 4) {
-                        MenuPrincipal.printMenu(); //opciones del menu principal. IMPLEMENTAR
+                    while (menuIngreso < 0 || menuIngreso > 2) {
+                        System.out.println(MenuPrincipal.printMenu()); //opciones del menu principal. IMPLEMENTAR
                         menuIngreso = scanner.nextInt();
                     }
                     switch (menuIngreso) {/* SWITCH DEL MENU PRINCIPAL */
                         case 0: //SALIR
-                            break;
+                            cuenta = null;menuIngreso = 0;break;//ESC. del menu principal. cerrar sesion.
                         case 1:// ENTRAR EN LA APLICACION
                             AplicacionCliente aplicacionCliente = new AplicacionCliente(); aplicacionCliente.main();
                             break;
@@ -94,10 +92,10 @@ public class Main {
                                 catch (PasswordIncorrectException e) {System.out.println(e.getMessage());}
                             }
                             break;
-                        case 4:cuenta = null;menuIngreso = 4;break;//ESC. del menu principal. cerrar sesion.
                     }/* SWITCH DEL MENU PRINCIPAL */
                     /*  - - - - - -  - - - - - -  MENU PRINCIPAL  - - - - - -   - - - - - - */
                 }
+                menuIngreso = -1; // re-assign value to not get out of the whole program.
             }
         }
     }

@@ -1,1 +1,11 @@
-funcion: 'quitarPedido': IndexOutOfBounds cuando se ingresa un indice incorrecto.
+//Pedidos
+Cuando se envía un envío vacío el programa promptea que hubo un error. Aclarar el por qué...
+Cuando muestra el estado del pedido no se indican correctamente los indices.
+Prompt del pedido. Finaliza con dos puntos '..'. Corregir el print.
+Quitar pedidos:
+ -opcion 0 para cancelar.
+ -tomar el primer indice a partir del numero entero '1'.
+
+//Login
+
+PARTS.

@@ -1,4 +1,6 @@
 package Model.Classes;
+import Model.Exceptions.EmptyOrderException;
+
 import java.util.Scanner;
 
 /**
@@ -51,20 +53,21 @@ public class AplicacionCliente {
                                             confirmar != 0);
                                 }break;
                             }
-                            case 3 -> {//quitar producto.
+                            case 3 -> { //quitar producto.
                                 int indice, cantidad;System.out.println("Ingresa el numero del articulo: ");indice = scanner.nextInt();
                                 System.out.println("Ingresa la cantidad que quieres remover: ");cantidad = scanner.nextInt();
-                                Pedido aux = SistemaPedidosCliente.quitarPedido(indice, cantidad,coleccionPedidos);
+                                try {Pedido aux = SistemaPedidosCliente.quitarPedido(indice, cantidad, coleccionPedidos);}
+                                catch (IndexOutOfBoundsException e) {System.out.println(e.getMessage());}
                                 break;
                             }
                         }
                     } while (eleccion != 1);break;
                 }
-                case 2 -> {//enviar el pedido.
-                    boolean flag = SistemaPedidosCliente.enviarPedido(coleccionPedidos);
+                case 2 -> {//enviar el pedido.//usar excepcion.
+                    boolean flag = false;
+                    try {flag = SistemaPedidosCliente.enviarPedido(coleccionPedidos);}
+                    catch (EmptyOrderException e) {System.out.println(e.getMessage()+"a");}
                     if (flag) {System.out.println("El pedido se ha enviado correctamente.");eleccion = 0;}
-                    else {System.out.println("Hubo un error en el envio.");}
-                    //usar excepcion.
                     break;
                 }
             }

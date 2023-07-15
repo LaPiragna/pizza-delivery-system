@@ -60,6 +60,8 @@ public class ColeccionPedidos implements IColeccionPedidos, Serializable {
      */
     @Override
     public Pedido quitarPedido(int indidce, int cantidad) {
+        if (indidce < 0 || indidce > pedido.size()) throw new IndexOutOfBoundsException("No hemos podido remover" +
+                " la orden porque no has ingresado un numero valido. Por favor intentalo de nuevo.");
         Pedido aux = pedido.get(indidce);
         if (aux.getCant() <= cantidad) {
             return this.pedido.remove(indidce);
@@ -82,7 +84,8 @@ public class ColeccionPedidos implements IColeccionPedidos, Serializable {
             for (Pedido p:pedido) {
                 stringBuilder.append(i).append(")\n")
                         .append(p.toString())
-                        .append(".\n");
+                        .append("\n");
+                i++;
             }
         }
         return stringBuilder.toString();
