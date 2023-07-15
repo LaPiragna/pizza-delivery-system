@@ -1,140 +1,78 @@
 package Model.Classes;
 import Model.Exceptions.*;
-
+import Model.Interfaces.IArchivos;
 import java.io.*;
 import java.util.*;
-
 /**
  * Clase para registracion/inicio sesion.
  * */
 public class Login {
-    private static final File archivoCuentas = new File("cuentas.bin");
     /**
      * Registra una nueva cuenta de usuario con el nombre de usuario y la contraseña proporcionados.
      *
      * @param username El nombre de usuario para la nueva cuenta.
      * @param clave La contraseña para la nueva cuenta.
      * @return La cuenta registrada.
-     * @throws RegistrxCanceladxExc Si ocurre un error durante el registro.
+     * @throws RegistryCancelledException Si ocurre un error durante el registro.
      * @throws UsernameExistenteExc Si el nombre de usuario ya existe.
      */
-    public static Cuenta registro(String username, String clave) throws RegistrxCanceladxExc, UsernameExistenteExc {
-
+    public static Cuenta registro(String username, String clave) throws RegistryCancelledException, UsernameExistenteExc {
+        if (username.equals("0")) throw new RegistryCancelledException(); //Cancela el registro.
         Cuenta cuenta = new Cuenta();
-
         HashMap<String, Cuenta> hashMap=new HashMap<>();
-
+        File archivoCuentas = new File(IArchivos.ACCOUNTS_BIN);
         ObjectOutputStream objectOutputStream = null;
         ObjectInputStream objectInputStream = null;
-
         if (archivoCuentas.exists()) {
-
             try {
-
                 objectInputStream = new ObjectInputStream(new FileInputStream(archivoCuentas));
-
                 while (true) {
-
                     try {
-
                         Cuenta aux = (Cuenta) objectInputStream.readObject();
                         hashMap.put(aux.getNombreUsuario(), aux);
-
-                    } catch (ClassNotFoundException e) {
-                        throw new RegistrxCanceladxExc();
-
                     }
-
-                }
-
-            } catch (EOFException eofException) {
-                eofException.getMessage();
-            } catch (IOException e) {
-                throw new RegistrxCanceladxExc();
-
-            } finally {
-
-                try {
-                    objectInputStream.close();
-                } catch (IOException e) {
-                    throw new RegistrxCanceladxExc();
-                }
-
-            }
-
-            if (username.equals("0")) { //cancela el registro
-
-                throw new RegistrxCanceladxExc();
-
-            } else {
-
-                if (!(hashMap.containsKey(username))) { //verificar que nx exista el username
-
-                    cuenta = new Cuenta(username, clave, UUID.randomUUID());
-
-                    hashMap.put(cuenta.getNombreUsuario(), cuenta);
-
-                } else {
-
-                    throw new UsernameExistenteExc(username);
-
+                    catch (ClassNotFoundException e) {throw new RegistryCancelledException();}
                 }
             }
-
+            catch (EOFException eofException) {eofException.getMessage();}
+            catch (IOException e) {throw new RegistryCancelledException();}
+            finally {
+                try {objectInputStream.close();}
+                catch (IOException e) {throw new RegistryCancelledException();}
+            }
+            if (!(hashMap.containsKey(username))) { //verificar que nx exista el username
+                cuenta = new Cuenta(username, clave, UUID.randomUUID());
+                hashMap.put(cuenta.getNombreUsuario(), cuenta);
+            }
+            else throw new UsernameExistenteExc(username);
             //REESCRITURA DEL ARCHIVO CON LA NUEVA CUENTA.
             try {
-
                 objectOutputStream = new ObjectOutputStream(new FileOutputStream(archivoCuentas));
-
-                for (Map.Entry<String, Cuenta> entry : hashMap.entrySet()) { //sobreexritura de archivx
-                    objectOutputStream.writeObject(entry.getValue());
-                }
-
-            } catch (IOException e) {
-                throw new RegistrxCanceladxExc();
-            } finally {
-                try {
-                    if (objectOutputStream != null) {
-                        objectOutputStream.close();
-                    }
-                } catch (IOException e) {
-                    throw new RegistrxCanceladxExc();
-                }
-
+                for (Map.Entry<String, Cuenta> entry : hashMap.entrySet())objectOutputStream.writeObject(entry.getValue()); //sobreexritura de archivx
             }
-
+            catch (IOException e) {throw new RegistryCancelledException();}
+            finally {
+                try {if (objectOutputStream != null) objectOutputStream.close();}
+                catch (IOException e) {throw new RegistryCancelledException();}
+            }
         }
+
         //SI EL ARCHIVO NO EXISTE.
         else {
-
-            if (username.equals("0")) {
-                throw new RegistrxCanceladxExc();
-            }
-
             cuenta = new Cuenta(username, clave, UUID.randomUUID());
-
             hashMap.put(cuenta.getNombreUsuario(), cuenta);
-
             try {
-
                 objectOutputStream = new ObjectOutputStream(new FileOutputStream(archivoCuentas));
                 objectOutputStream.writeObject(cuenta);
-
-            } catch (IOException e) {
-                throw new RegistrxCanceladxExc();
-            }finally {
-                try {
-                    if (objectOutputStream != null) {
-                        objectOutputStream.close();
-                    }
-                } catch (IOException e) {
-                    throw new RegistrxCanceladxExc();
-                }
+            }
+            catch (IOException e) {throw new RegistryCancelledException("Error al guardar los datos.");} //Error al escribir el archivo.
+            finally {
+                try {if (objectOutputStream != null) objectOutputStream.close();}
+                catch (IOException e) {throw new RegistryCancelledException("Error al guardar los datos.");}//Error al cerrar el archivo.
             }
         }
         return cuenta;
     }
-
     /**
      * Inicia sesión con una cuenta de usuario existente.
      * <p>
@@ -145,98 +83,43 @@ public class Login {
      *
      * @return La cuenta de usuario con la que se inició sesión.
      * @throws IOException Si ocurre un error al leer el archivo de cuentas.
-     * @throws InicixSesixnCanceladxExc Si el usuarix decide salir o si se superan los intentos de
+     * @throws LoginCancelledException Si el usuarix decide salir o si se superan los intentos de
      * inicio de sesion o i no existe el archivo.
-     * @throws ClaveIncorrectaExc si se superan los intentos de inicio de sesion.
+     * @throws PasswordIncorrectException si se superan los intentos de inicio de sesion.
      */
-    public static Cuenta iniciarSesion(String usuario, String clave) throws InicixSesixnCanceladxExc, ClaveIncorrectaExc, UsernameInexistenteExc {
-
-        //Este objeto lee la informacion del archivo de las cuentas.
-        ObjectInputStream objectInputStream = null;
-
-        //En esta coleccion se van a almacenar la informacion del archivo de cuentas.
-        HashMap<String, Cuenta> hashMap = new HashMap<>();
-
-        //instancia auxiliar.
-        Cuenta aux = new Cuenta();
-
-        //NO EXISTE EL ARCHIVO.
-        if (!archivoCuentas.exists()) {
-
+    public static Cuenta iniciarSesion(String usuario, String clave) throws LoginCancelledException, PasswordIncorrectException, UsernameInexistenteExc {
+        if (usuario.equals("0")) throw new LoginCancelledException();//SE CANCELA EL INICIO DE SESION.
+        File archivoCuentas = new File(IArchivos.ACCOUNTS_BIN);
+        ObjectInputStream objectInputStream = null;//Este objeto lee la informacion del archivo de las cuentas.
+        HashMap<String, Cuenta> hashMap = new HashMap<>();//En esta coleccion se van a almacenar las instancias de las cuentas.
+        Cuenta aux = new Cuenta();//instancia auxiliar.
+        if (!archivoCuentas.exists()) {//NO EXISTE EL ARCHIVO.
+            try {throw new LoginCancelledException("No existen cuentas registradas aun.");}
+            catch (LoginCancelledException LoginCancelledException) {System.out.println(LoginCancelledException.getMessage());}
+        }
+        else {//EXISTE EL ARCHIVO.
             try {
-
-                throw new InicixSesixnCanceladxExc("No existen cuentas registradas aun.");
-
-            } catch (InicixSesixnCanceladxExc inicixSesixnCanceladxExc) {
-
-                System.out.println(inicixSesixnCanceladxExc.getMessage());
-
-            }
-            //EXISTE EL ARCHIVO.
-        } else {
-
-            try {
-
-                //se inicializa el stream lector.
-                objectInputStream = new ObjectInputStream(new FileInputStream(archivoCuentas));
-
+                objectInputStream = new ObjectInputStream(new FileInputStream(archivoCuentas));//se inicializa el stream lector.
                 try {
-
-                    while (true) {
-
-                        /*Se almacena toda la informacion del archivo en el HashMap*/
+                    while (true) {/*Se almacena toda la informacion del archivo en el HashMap*/
                         Cuenta aux1 = (Cuenta) objectInputStream.readObject();
                         hashMap.put(aux1.getNombreUsuario(), aux1);
-
                     }
-
-                } catch (EOFException eofException) {
-
-                    eofException.getMessage();
-
-                } catch (ClassNotFoundException e) {
-
-                    System.out.println(e.getMessage());
-
                 }
-
-                //SE CANCELA EL INICIO DE SESION.
-                if (usuario.equals("0")) throw new InicixSesixnCanceladxExc();
-
-                //USUARIO COINCIDE.
-                if (hashMap.containsKey(usuario)) {
-
-                    aux = hashMap.get(usuario);
-
-                }
-                //USUARIO NO EXISTE.
-                else {
-                    throw new UsernameInexistenteExc(usuario);
-                }
-
-                if (aux.verificarClave(clave))
-                    /*
-                     * Retorna satisfactoriamente la instancia
-                     * del objeto de tipo Modelo.Cuenta.
-                     * */
-                    return aux;
-
-                //Ingreso incorrecto de clave. Se lanza excepcion.
-                throw new ClaveIncorrectaExc();
-
+                catch (EOFException eofException) {eofException.getMessage();}
+                catch (ClassNotFoundException e) {System.out.println(e.getMessage());}
+                if (hashMap.containsKey(usuario)) aux = hashMap.get(usuario);//USUARIO COINCIDE.
+                else throw new UsernameInexistenteExc(usuario);//USUARIO NO EXISTE.
+                if (aux.verificarClave(clave)) return aux; //Retorna instancia.
+                throw new PasswordIncorrectException();//Ingreso incorrecto de clave. Se lanza excepcion.
             }
-            catch (IOException e) { //de inicializar el ObjectInputStream.
-                System.out.println(e.getMessage());
-            }
+            catch (IOException e) { System.out.println(e.getMessage());}//de inicializar el ObjectInputStream.
             finally {
-                try {
-                    objectInputStream.close(); //cierra stream
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
+                try {objectInputStream.close();} //cierra stream
+                catch (IOException e) {System.out.println(e.getMessage());}
             }
         }
-        throw new InicixSesixnCanceladxExc("inicio de sesion no satisfactorio.");
+        throw new LoginCancelledException("inicio de sesion no satisfactorio.");
     }
 
 
@@ -269,9 +152,10 @@ public class Login {
      *
      * @param cuenta la cuenta a eliminar
      * @param clave la clave de la cuenta
-     * @throws ClaveIncorrectaExc si la clave es incorrecta
+     * @throws PasswordIncorrectException si la clave es incorrecta
      */
-    public static void borrarCuenta(Cuenta cuenta, String clave) throws ClaveIncorrectaExc {
+    public static void borrarCuenta(Cuenta cuenta, String clave) throws PasswordIncorrectException {
+        File archivoCuentas = new File(IArchivos.ACCOUNTS_BIN);
         boolean aux = validarEliminacion(clave, cuenta);
         if (aux) {
             ArrayList<Cuenta> arrayList = new ArrayList<>();
@@ -326,7 +210,7 @@ public class Login {
                 }
             }
         } else {
-            throw new ClaveIncorrectaExc("La clave es incorrecta.");
+            throw new PasswordIncorrectException("La clave es incorrecta.");
         }
     }
 

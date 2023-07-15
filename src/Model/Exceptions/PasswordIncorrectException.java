@@ -1,12 +1,12 @@
 package Model.Exceptions;
 
-public class ClaveIncorrectaExc extends Exception{
+public class PasswordIncorrectException extends Exception{
     private String message = "La clave es incorrecta.";
 
-    public ClaveIncorrectaExc() {
+    public PasswordIncorrectException() {
     }
 
-    public ClaveIncorrectaExc(String message) {
+    public PasswordIncorrectException(String message) {
         this.message = message;
     }
 

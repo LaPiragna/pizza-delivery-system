@@ -74,7 +74,7 @@ public class SistemaPedidosCliente {
     public static boolean enviarPedido(ColeccionPedidos coleccionPedidos) {
         boolean ret = false;
         if (coleccionPedidos.getPedidos().size() == 0) return ret; //excepcion.
-        File file = new File(IArchivos.archivo_pedidos);
+        File file = new File(IArchivos.PEDIDOS_BIN);
         if (!file.exists()) {
             try {file.createNewFile();}
             catch (IOException e) {System.out.println("Error al crear el archivo. " + e.getMessage() + '.');}

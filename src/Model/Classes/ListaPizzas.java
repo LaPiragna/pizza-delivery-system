@@ -20,7 +20,7 @@ public class ListaPizzas {
      */
     private static ArrayList<Pizza> cargarLista(){
         ArrayList<Pizza> aux = new ArrayList<>();
-        File file = new File(IArchivos.archivo_pizzas);
+        File file = new File(IArchivos.PIZZAS_JSON);
         ObjectMapper objectMapper = new ObjectMapper();
         Pizza[] pizzas1;
         try {

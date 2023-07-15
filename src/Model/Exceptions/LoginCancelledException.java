@@ -1,13 +1,13 @@
 package Model.Exceptions;
 
-public class InicixSesixnCanceladxExc extends Exception{
+public class LoginCancelledException extends Exception{
     private String message;
 
-    public InicixSesixnCanceladxExc() {
+    public LoginCancelledException() {
         this.message = "se ha canceladx el inicix de sesixn.";
     }
 
-    public InicixSesixnCanceladxExc(String message) {
+    public LoginCancelledException(String message) {
         this.message = message;
     }
 
