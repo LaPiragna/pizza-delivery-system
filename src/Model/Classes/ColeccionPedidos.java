@@ -60,8 +60,7 @@ public class ColeccionPedidos implements IColeccionPedidos, Serializable {
      */
     @Override
     public Pedido quitarPedido(int indidce, int cantidad) {
-        if (indidce < 0 || indidce > pedido.size()) throw new IndexOutOfBoundsException("No hemos podido remover" +
-                " la orden porque no has ingresado un numero valido. Por favor intentalo de nuevo.");
+        indidce--;
         Pedido aux = pedido.get(indidce);
         if (aux.getCant() <= cantidad) {
             return this.pedido.remove(indidce);

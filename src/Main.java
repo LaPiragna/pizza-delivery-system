@@ -3,6 +3,7 @@ import Model.Classes.Cuenta;
 import Model.Classes.Login;
 import Model.Classes.MenuPrincipal;
 import Model.Exceptions.*;
+import Model.Interfaces.IErrors;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -17,8 +18,8 @@ public class Main {
             menuIngreso = -1;
             while (menuIngreso < 0 || menuIngreso > 2) {   // VALIDACION.
                 Login.printMenu(); // muestra del menu
-                try {menuIngreso = scanner.nextInt();if(menuIngreso < 0 || menuIngreso > 2) System.out.println("Ingreso invalido. Reintentar.");}
-                catch (InputMismatchException e){System.out.println("Ingreso invalido. Reintentar.");menuIngreso=-1;scanner.nextLine();}
+                try {menuIngreso = scanner.nextInt();if(menuIngreso < 0 || menuIngreso > 2) System.out.println(IErrors.INPUTERROR_MSG);}
+                catch (InputMismatchException e){System.out.println(IErrors.INPUTERROR_MSG);menuIngreso=-1;scanner.nextLine();}
             }
             String usuario = "", clave = "";
             if (menuIngreso != 0) {/* - - - INGRESO DE DATOS */
@@ -73,7 +74,9 @@ public class Main {
                     //VALIDACION
                     while (menuIngreso < 0 || menuIngreso > 2) {
                         System.out.println(MenuPrincipal.printMenu()); //opciones del menu principal. IMPLEMENTAR
-                        menuIngreso = scanner.nextInt();
+                        try {menuIngreso = scanner.nextInt();}
+                        catch (InputMismatchException e){System.out.println(IErrors.INPUTERROR_MSG);
+                            scanner.nextLine();menuIngreso = -1;}
                     }
                     switch (menuIngreso) {/* SWITCH DEL MENU PRINCIPAL */
                         case 0: //SALIR

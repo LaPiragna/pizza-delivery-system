@@ -26,40 +26,6 @@ public class SistemaPedidosCliente {
                 """;
     }
 
-    public static int menu(int eleccion) {
-        switch (eleccion) {
-            case 0: //Salida de la aplicacion. -> LISTO
-                eleccion = 0;
-                break;
-            case 1: //Pedido (modificacion): -> pendiente
-                eleccion = 1;
-                break;
-            case 2: //Enviar pedido. -> pendiente
-                eleccion = 2;
-                break;
-        }
-        return eleccion;
-    }
-
-    public static int menuModificacionDelPedido(int eleccion,
-                           ColeccionPedidos coleccionPedidos) {
-        switch (eleccion) {
-            case 0: //Salir. -> LISTO
-                eleccion = 0;
-                break;
-            case 1: //Listar productos. -> LISTO
-                eleccion = 1;
-                break;
-            case 2: //Agregar producto. -> LISTO
-                eleccion = 2;
-                break;
-            case 3: //Quitar producto. -> pendiente
-                eleccion = 3;
-                break;
-        }
-        return eleccion;
-    }
-
     public static boolean agregarPedido(int id, int cantidad,ColeccionPedidos coleccionPedidos) {
         return coleccionPedidos.agregarPedido(id,cantidad);
     }
